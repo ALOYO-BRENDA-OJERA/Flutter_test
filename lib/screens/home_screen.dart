@@ -13,7 +13,6 @@ class HomeScreen extends StatelessWidget {
     'Movies',
   ];
 
-  // Titles for the shorts
   final List<String> shortTitles = [
     'Join us for a quick look at the latest trending dance moves!',
     'Watch this amazing life hack',
@@ -22,7 +21,14 @@ class HomeScreen extends StatelessWidget {
     'Earn 5 dollars every 30 mins',
   ];
 
-  // Titles and descriptions for the video thumbnails
+  final List<String> shortThumbnailUrls = [
+    'https://media.istockphoto.com/id/2173304976/photo/young-man-dancer-dancing-in-a-ballroom.jpg?s=612x612&w=0&k=20&c=mP87r-Vphw4qMhKD1IL-g6CBzJjLYhULU5UoJ6iZMD0=',
+    'https://media.istockphoto.com/id/928437116/photo/creative-eureka-moment.jpg?s=612x612&w=0&k=20&c=TAo2E2_bGEcAB-DDpyuOz5_tmCh9GevRWdi46bmNXJQ=',
+    'https://media.istockphoto.com/id/646121204/photo/coffee-cup-with-latte-art-on-the-espresso-machine-tray.jpg?s=612x612&w=0&k=20&c=1opa0xP1fvBoa9SZ6yo4jYrY-Jq3Nl4ve7tMweNO8_g=',
+    'https://media.istockphoto.com/id/1707992084/photo/dog-sport-background-agile-dog-being-trained-to-catch-flying-disc-on-beautiful-summer-day.jpg?s=612x612&w=0&k=20&c=fjXUx7WgrB0oBITEJASxwlodhkBUk_8ykZd7FXbLy4I=',
+    'https://media.istockphoto.com/id/1465618017/photo/businessmen-investor-think-before-buying-stock-market-investment-using-smartphone-to-analyze.jpg?s=612x612&w=0&k=20&c=YNEkfoME1jbz6FUJImxCQtaGZZntrf7u-Byxmgk4pOY='
+  ];
+
   final List<String> videoTitles = [
     'How to Make a Perfect Omelette',
     'Exploring Hidden Gems in Your City',
@@ -39,8 +45,18 @@ class HomeScreen extends StatelessWidget {
     'Explore the science behind stress and learn effective techniques to manage anxiety and promote relaxation.',
   ];
 
+  final List<String> videoThumbnailUrls = [
+    'https://media.istockphoto.com/id/1144835722/photo/young-woman-in-a-gray-aprons-breaks-the-eggs.jpg?s=612x612&w=0&k=20&c=lVXf5DlseN40nMjO97CVaci4FWeFvSmw2fdMCR3hJ-w=',
+    'https://media.istockphoto.com/id/177421738/photo/ants-hide-treasure.jpg?s=612x612&w=0&k=20&c=A-NVrqxbpPK7hxghe04O73O-gVxjNJzsDi2JtuH4LhM=',
+    'https://media.istockphoto.com/id/1566751813/photo/young-asian-woman-sitting-taking-a-break-relaxing-after-exercise-with-a-whey-protein-and.jpg?s=612x612&w=0&k=20&c=Z2x4Sc3IIAFQtPrdb2Efu2TRwdVcI-yffix_znXTBdQ=',
+    'https://media.istockphoto.com/id/628088154/photo/home-decor-inspired-by-autumn.jpg?s=612x612&w=0&k=20&c=uD0TxktIxhJSzMye_kf40ev72efOpiZlnNZcI8I4ggQ=',
+    'https://media.istockphoto.com/id/1713368220/photo/young-adult-woman-relaxing-at-a-luxury-hotel-on-holiday-in-the-c%C3%B4te-dazur-france.jpg?s=612x612&w=0&k=20&c=QMJQg8S4RknVtHZ0j4IBVXR5Rq2An0uUwypCtUBzLW4=',
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: CustomAppBar(), // Your custom app bar here
       bottomNavigationBar: CustomBottomNavigationBar(), // Optional bottom navigation bar
@@ -55,18 +71,15 @@ class HomeScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Chip(
+                      label: Text(
                         categories[index],
                         style: const TextStyle(color: Colors.white),
                       ),
+                      backgroundColor: Colors.grey[800],
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     ),
                   );
                 },
@@ -77,7 +90,6 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  // Shorts Logo
                   Image.asset(
                     'assets/images/shorts.png', // Update with the correct path to your logo
                     width: 40,
@@ -91,9 +103,10 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            // Placeholder for Shorts
+            // Shorts Carousel
             Container(
-              height: 200, // Adjusted height to fit titles and descriptions
+              height: 200,
+              width: screenWidth, // Take up full screen width
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: shortTitles.length,
@@ -101,22 +114,31 @@ class HomeScreen extends StatelessWidget {
                   return Container(
                     width: 150,
                     margin: const EdgeInsets.only(right: 8.0),
-                    color: Colors.grey,
+                    color: Colors.grey[900],
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Expanded(
-                          child: Center(
-                            child: Icon(
-                              Icons.play_circle_fill, // Video icon
-                              size: 50,
-                              color: Colors.white,
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              shortThumbnailUrls[index],
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        Text(
-                          shortTitles[index],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                        const SizedBox(height: 4.0),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            shortTitles[index],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
@@ -124,7 +146,7 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
-            // Placeholder for Video Thumbnails List
+            // Video Thumbnails List
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -135,25 +157,49 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Placeholder for Video Thumbnail
+                        // Thumbnail
                         Container(
+                          width: screenWidth, // Take full screen width
                           height: 150,
-                          color: Colors.grey,
-                          child: const Center(
-                            child: Icon(
-                              Icons.play_circle_fill, // Video icon
-                              size: 50,
-                              color: Colors.white,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              videoThumbnailUrls[index],
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[800],
+                                  child: const Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
+                        // Title and Description
                         const SizedBox(height: 8.0),
                         Text(
                           videoTitles[index],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
                         const SizedBox(height: 4.0),
-                        Text(videoDescriptions[index]),
+                        Text(
+                          videoDescriptions[index],
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
                       ],
                     ),
                   );
